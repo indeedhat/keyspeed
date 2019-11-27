@@ -47,3 +47,6 @@ Options:
     --interval, -i[=5]
     Polling interval to uodate the count in seconds
 ```
+
+## Credits
+This was made possible by the excellent [MarinX/keylogger](https://github.com/MarinX/keylogger) library

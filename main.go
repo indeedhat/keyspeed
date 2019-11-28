@@ -15,11 +15,12 @@ const (
 )
 
 type KeySpeed struct {
-	Help     bool  `gli:"help,h" description:"display this message"`
-	Cpm      bool  `gli:"cpm,c" description:"display characters per minute (wpm is default)"`
-	Pad      int   `gli:"pad,p" description:"pad the display with leading 0's" default:"3"`
-	Best     bool  `gli:"best,b" description:"keep track of your best time for this session"`
-	Interval int64 `gli:"interval,i" description:"Polling interval to uodate the count in seconds" default:"5"`
+	Help     bool   `gli:"help,h" description:"display this message"`
+	Cpm      bool   `gli:"cpm,c" description:"display characters per minute (wpm is default)"`
+	Pad      int    `gli:"pad,p" description:"pad the display with leading 0's" default:"3"`
+	Best     bool   `gli:"best,b" description:"keep track of your best time for this session"`
+	Interval int64  `gli:"interval,i" description:"Polling interval to uodate the count in seconds" default:"5"`
+	Device   string `gli:"device,d" description:"manually set the keyboard device"`
 
 	log  []int64
 	best int
@@ -30,13 +31,15 @@ func (ks *KeySpeed) NeedHelp() bool {
 }
 
 func (ks *KeySpeed) Run() int {
-	device := keylogger.FindKeyboardDevice()
+	if "" == ks.Device {
+		ks.Device = keylogger.FindKeyboardDevice()
+	}
 
-	if 1 > len(device) {
+	if 1 > len(ks.Device) {
 		log.Fatal("no keyboard found")
 	}
 
-	logger, err := keylogger.New(device)
+	logger, err := keylogger.New(ks.Device)
 	if nil != err {
 		log.Fatal(err)
 	}
